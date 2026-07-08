@@ -1,0 +1,177 @@
+#!/usr/bin/env python3
+"""Validate the Perfect Prompt skill repository."""
+
+from __future__ import annotations
+
+import json
+import re
+import sys
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+SKILL_DIR = ROOT / "skills" / "perfect-prompt"
+SKILL_FILE = SKILL_DIR / "SKILL.md"
+
+
+REQUIRED_FILES = [
+    "README.md",
+    "LICENSE",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    ".gitignore",
+    ".github/FUNDING.yml",
+    ".github/workflows/validate.yml",
+    "skills/perfect-prompt/SKILL.md",
+    "skills/perfect-prompt/references/prompt-structure.md",
+    "skills/perfect-prompt/references/task-patterns.md",
+    "skills/perfect-prompt/references/agent-orchestration.md",
+    "skills/perfect-prompt/evals/evals.json",
+]
+
+
+def fail(message: str) -> None:
+    print(f"error: {message}", file=sys.stderr)
+    raise SystemExit(1)
+
+
+def read(path: Path) -> str:
+    try:
+        return path.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        fail(f"missing required file: {path.relative_to(ROOT)}")
+
+
+def parse_frontmatter(text: str) -> dict[str, str]:
+    if not text.startswith("---\n"):
+        fail("SKILL.md must start with YAML frontmatter")
+    try:
+        _, raw, _body = text.split("---\n", 2)
+    except ValueError:
+        fail("SKILL.md frontmatter is not closed")
+
+    data: dict[str, str] = {}
+    current_key: str | None = None
+    for line in raw.splitlines():
+        if not line.strip():
+            continue
+        if line.startswith(" ") and current_key:
+            data[current_key] += " " + line.strip()
+            continue
+        if ":" not in line:
+            fail(f"invalid frontmatter line: {line}")
+        key, value = line.split(":", 1)
+        current_key = key.strip()
+        data[current_key] = value.strip().strip('"')
+    return data
+
+
+def validate_required_files() -> None:
+    for relative in REQUIRED_FILES:
+        path = ROOT / relative
+        if not path.is_file():
+            fail(f"missing required file: {relative}")
+
+
+def validate_skill_frontmatter() -> None:
+    text = read(SKILL_FILE)
+    frontmatter = parse_frontmatter(text)
+
+    name = frontmatter.get("name")
+    if name != "perfect-prompt":
+        fail("SKILL.md frontmatter name must be perfect-prompt")
+    if SKILL_DIR.name != name:
+        fail("skill directory name must match frontmatter name")
+    if not re.fullmatch(r"[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?", name):
+        fail("skill name must be lowercase letters, digits, and hyphens")
+
+    description = frontmatter.get("description", "")
+    if not description:
+        fail("SKILL.md description is required")
+    if len(description) > 1024:
+        fail("SKILL.md description must be 1024 characters or fewer")
+    for keyword in ["prompt", "PR", "issue", "dashboard", "debugging", "planning"]:
+        if keyword.lower() not in description.lower():
+            fail(f"SKILL.md description should include trigger keyword: {keyword}")
+
+    if frontmatter.get("license") != "MIT":
+        fail("SKILL.md license must be MIT")
+
+
+def validate_skill_references() -> None:
+    text = read(SKILL_FILE)
+    for relative in [
+        "references/prompt-structure.md",
+        "references/task-patterns.md",
+        "references/agent-orchestration.md",
+    ]:
+        if relative not in text:
+            fail(f"SKILL.md does not reference {relative}")
+        if not (SKILL_DIR / relative).is_file():
+            fail(f"missing referenced file: {relative}")
+
+
+def validate_readme_and_funding() -> None:
+    readme = read(ROOT / "README.md")
+    if "npx skills add takeshijuan/perfect-prompt" not in readme:
+        fail("README.md must include the public install command")
+    if "https://skills.sh/b/takeshijuan/perfect-prompt" not in readme:
+        fail("README.md must include the skills.sh badge")
+
+    funding = read(ROOT / ".github" / "FUNDING.yml")
+    for expected in [
+        "github: takeshijuan",
+        "buy_me_a_coffee: takeshijuan",
+        'custom: ["https://paypal.me/takeshijuan"]',
+    ]:
+        if expected not in funding:
+            fail(f"FUNDING.yml missing: {expected}")
+
+
+def validate_evals() -> None:
+    eval_path = SKILL_DIR / "evals" / "evals.json"
+    try:
+        data = json.loads(read(eval_path))
+    except json.JSONDecodeError as exc:
+        fail(f"evals.json is invalid JSON: {exc}")
+
+    if data.get("skill_name") != "perfect-prompt":
+        fail("evals.json skill_name must be perfect-prompt")
+    evals = data.get("evals")
+    if not isinstance(evals, list) or len(evals) < 5:
+        fail("evals.json must contain at least five evals")
+
+    required_prompts = [
+        "/perfect-prompt: review PR#123",
+        "/perfect-prompt: implement login system",
+        "/perfect-prompt: add a dashboard view",
+        "/perfect-prompt: address issue #123",
+        "make this better for an agent: fix the staging auth bug",
+    ]
+    prompts = [item.get("prompt") for item in evals if isinstance(item, dict)]
+    for prompt in required_prompts:
+        if prompt not in prompts:
+            fail(f"evals.json missing prompt: {prompt}")
+
+    for item in evals:
+        if not isinstance(item.get("id"), int):
+            fail("each eval must have an integer id")
+        if not item.get("prompt"):
+            fail("each eval must have a prompt")
+        if not item.get("expected_output"):
+            fail("each eval must have expected_output")
+        if not isinstance(item.get("files"), list):
+            fail("each eval must have files list")
+
+
+def main() -> None:
+    validate_required_files()
+    validate_skill_frontmatter()
+    validate_skill_references()
+    validate_readme_and_funding()
+    validate_evals()
+    print("ok: perfect-prompt skill repository is valid")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,65 @@
+# Prompt Structure Reference
+
+Use this reference to build the common structure for every generated prompt.
+
+## Principles
+
+- Start outcome-first: define the result, success criteria, constraints, and evidence required.
+- Use clear sections so the receiving agent can locate instructions quickly.
+- Put dynamic task context near the top, but tell the receiving agent to discover repo truth before making claims.
+- Use examples or templates only when they reduce ambiguity.
+- Keep reasoning instructions practical: ask the agent to plan and verify, but do not require hidden reasoning in the final answer.
+- Prefer concise prompts that preserve judgment. Do not overload the prompt with every possible edge case.
+- Include uncertainty handling: ask clarifying questions only when required, otherwise make a conservative assumption and report it.
+- Make validation explicit. Good prompts state what must be checked before the agent calls the task done.
+
+## Required Sections
+
+Use these sections in order unless the user's task clearly needs a different order.
+
+```markdown
+You are [role suited to the task]. Work pragmatically, verify claims against source truth, and carry the task through to a clear stopping point.
+
+/goal
+[Single concrete objective for the main agent.]
+
+## Context
+- User request: [original request]
+- Known identifiers: [issue/PR/path/service/etc. if present]
+- Source truth to inspect: [repo docs, issue/PR body, tests, logs, UI, deployment, docs, etc.]
+
+## Operating Rules
+- Do not speculate about files, issues, PRs, logs, docs, or runtime state you have not inspected.
+- Prefer existing project conventions and tools.
+- Keep user-visible updates concise.
+- Treat setup, verification, and rollout state as separate signals.
+- If blocked, report the blocker with the exact command, error, or missing permission.
+
+## Parallel Agent Plan
+[Subagent policy and dedicated /goal blocks, or explain why no subagents are needed.]
+
+## Execution Plan
+[Ordered, task-specific plan that the main agent can execute.]
+
+## Verification
+[Tests, checks, review criteria, or acceptance criteria.]
+
+## Final Response
+Report:
+- What changed or what was found
+- Verification run and result
+- Remaining risks or blockers
+- Links or file references where relevant
+```
+
+## Placeholder Policy
+
+Use placeholders only for information the receiving agent cannot discover, such as an external account choice or product preference. Do not use placeholders for repository paths, issue bodies, branch names, package scripts, or PR metadata when the receiving agent can inspect them.
+
+## Anti-Patterns
+
+- Do not produce a generic "be helpful" prompt.
+- Do not bury the actual objective after long background text.
+- Do not tell the receiving agent to spawn many agents for tiny or tightly coupled tasks.
+- Do not generate a prompt that silently assumes a repo, framework, or hosting provider.
+- Do not ask the receiving agent to claim completion without verification.
