@@ -111,6 +111,15 @@ def validate_skill_references() -> None:
         if not (SKILL_DIR / relative).is_file():
             fail(f"missing referenced file: {relative}")
 
+    required_phrases = [
+        "exactly one fenced `markdown` code block",
+        "no prose before or after",
+        "The entire answer is exactly one fenced `markdown` code block",
+    ]
+    for phrase in required_phrases:
+        if phrase not in text:
+            fail(f"SKILL.md missing output wrapper rule: {phrase}")
+
 
 def validate_readme_and_funding() -> None:
     readme = read(ROOT / "README.md")
@@ -195,8 +204,11 @@ def validate_evals() -> None:
             fail("each eval must have an integer id")
         if not item.get("prompt"):
             fail("each eval must have a prompt")
-        if not item.get("expected_output"):
+        expected_output = item.get("expected_output")
+        if not expected_output:
             fail("each eval must have expected_output")
+        if "single fenced markdown code block" not in expected_output:
+            fail("each eval expected_output must require a fenced markdown code block")
         if not isinstance(item.get("files"), list):
             fail("each eval must have files list")
 

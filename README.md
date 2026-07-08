@@ -51,6 +51,7 @@ The repository is listed on [skills.sh](https://skills.sh/takeshijuan/perfect-pr
 The generated prompt includes:
 
 - a main `/goal`
+- a single fenced `markdown` code block wrapper for easy copying
 - role and objective
 - context discovery and source-of-truth rules
 - constraints and success criteria

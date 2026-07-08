@@ -12,10 +12,11 @@ Use this reference to build the common structure for every generated prompt.
 - Prefer concise prompts that preserve judgment. Do not overload the prompt with every possible edge case.
 - Include uncertainty handling: ask clarifying questions only when required, otherwise make a conservative assumption and report it.
 - Make validation explicit. Good prompts state what must be checked before the agent calls the task done.
+- Wrap the final answer in exactly one fenced `markdown` code block so the user can copy the generated prompt without extra cleanup.
 
 ## Required Sections
 
-Use these sections in order unless the user's task clearly needs a different order.
+Use these sections inside the fenced output code block, in order unless the user's task clearly needs a different order.
 
 ```markdown
 You are [role suited to the task]. Work pragmatically, verify claims against source truth, and carry the task through to a clear stopping point.
@@ -63,3 +64,4 @@ Use placeholders only for information the receiving agent cannot discover, such 
 - Do not tell the receiving agent to spawn many agents for tiny or tightly coupled tasks.
 - Do not generate a prompt that silently assumes a repo, framework, or hosting provider.
 - Do not ask the receiving agent to claim completion without verification.
+- Do not put explanatory prose outside the fenced output code block.

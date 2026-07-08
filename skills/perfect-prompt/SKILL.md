@@ -6,7 +6,7 @@ license: MIT
 
 # Perfect Prompt
 
-Turn the user's short instruction into one complete agent prompt. The output is the generated prompt itself, not commentary about prompt engineering and not execution of the requested work.
+Turn the user's short instruction into one complete agent prompt. The output is the generated prompt itself wrapped in a single fenced `markdown` code block, not commentary about prompt engineering and not execution of the requested work.
 
 ## Core workflow
 
@@ -42,11 +42,15 @@ The generated prompt must include:
 - Model/cost policy: cheaper/faster models for narrow discovery and checks; stronger models for architecture, risky edits, synthesis, and final review.
 - Explicit instruction to synthesize subagent results rather than blindly concatenate them.
 - A final reporting contract that separates completed work, verification, residual risk, and blockers.
+- Response wrapping: the answer must be exactly one fenced `markdown` code block containing the generated prompt, with no prose before or after the block.
 
 ## Output format
 
-Return exactly this shape:
+Return exactly one fenced `markdown` code block. Do not add introductory text, explanations, or follow-up suggestions outside the code block.
 
+The code block's content must follow this shape:
+
+````markdown
 ```markdown
 You are ...
 
@@ -71,6 +75,7 @@ You are ...
 ## Final Response
 ...
 ```
+````
 
 If subagents are not useful, keep `## Parallel Agent Plan` and explain that the task should stay single-threaded because the work is too small, sequential, or context-coupled.
 
@@ -86,6 +91,7 @@ Before responding, verify:
 - The prompt tells the main agent how to synthesize returned results.
 - Verification gates are concrete and relevant to the task class.
 - The final response contract is explicit.
+- The entire answer is exactly one fenced `markdown` code block with no surrounding commentary.
 
 ## Example
 
@@ -97,9 +103,11 @@ Input:
 
 Output:
 
+````markdown
 ```markdown
 You are a senior code review agent...
 
 /goal
 Review PR #123 end to end...
 ```
+````

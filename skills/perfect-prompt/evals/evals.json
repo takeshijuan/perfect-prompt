@@ -4,31 +4,31 @@
     {
       "id": 1,
       "prompt": "/perfect-prompt: review PR#123",
-      "expected_output": "A ready-to-paste PR review prompt with a main /goal, PR metadata discovery, findings-first review format, bounded parallel review lanes with dedicated /goal blocks, model/cost guidance, and verification criteria.",
+      "expected_output": "A single fenced markdown code block containing a ready-to-paste PR review prompt with a main /goal, PR metadata discovery, findings-first review format, bounded parallel review lanes with dedicated /goal blocks, model/cost guidance, and verification criteria.",
       "files": []
     },
     {
       "id": 2,
       "prompt": "/perfect-prompt: implement login system",
-      "expected_output": "A ready-to-paste feature implementation prompt with source-truth discovery, auth/security considerations, implementation and test expectations, appropriate subagent lanes, dedicated /goal blocks, and final reporting rules.",
+      "expected_output": "A single fenced markdown code block containing a ready-to-paste feature implementation prompt with source-truth discovery, auth/security considerations, implementation and test expectations, appropriate subagent lanes, dedicated /goal blocks, and final reporting rules.",
       "files": []
     },
     {
       "id": 3,
       "prompt": "/perfect-prompt: add a dashboard view",
-      "expected_output": "A ready-to-paste UI/dashboard prompt with existing design-system discovery, data/loading/error states, accessibility and responsive verification, bounded subagent use, and a concise final response contract.",
+      "expected_output": "A single fenced markdown code block containing a ready-to-paste UI/dashboard prompt with existing design-system discovery, data/loading/error states, accessibility and responsive verification, bounded subagent use, and a concise final response contract.",
       "files": []
     },
     {
       "id": 4,
       "prompt": "/perfect-prompt: address issue #123",
-      "expected_output": "A ready-to-paste issue-fixing prompt that treats the issue number as one task type among many, instructs the agent to inspect issue metadata and related code, adds targeted tests, and separates local verification from PR or deployment state.",
+      "expected_output": "A single fenced markdown code block containing a ready-to-paste issue-fixing prompt that treats the issue number as one task type among many, instructs the agent to inspect issue metadata and related code, adds targeted tests, and separates local verification from PR or deployment state.",
       "files": []
     },
     {
       "id": 5,
       "prompt": "make this better for an agent: fix the staging auth bug",
-      "expected_output": "A ready-to-paste debugging prompt that asks the receiving agent to gather symptoms, inspect staging-specific configuration and logs where available, separate facts from hypotheses, parallelize independent investigation lanes, and report root cause, fix, verification, and remaining risk.",
+      "expected_output": "A single fenced markdown code block containing a ready-to-paste debugging prompt that asks the receiving agent to gather symptoms, inspect staging-specific configuration and logs where available, separate facts from hypotheses, parallelize independent investigation lanes, and report root cause, fix, verification, and remaining risk.",
       "files": []
     }
   ]
