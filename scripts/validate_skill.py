@@ -19,6 +19,7 @@ REQUIRED_FILES = [
     "LICENSE",
     "CONTRIBUTING.md",
     "SECURITY.md",
+    "skills.sh.json",
     ".gitignore",
     ".github/FUNDING.yml",
     ".github/workflows/validate.yml",
@@ -117,6 +118,8 @@ def validate_readme_and_funding() -> None:
         fail("README.md must include the public install command")
     if "https://skills.sh/b/takeshijuan/perfect-prompt" not in readme:
         fail("README.md must include the skills.sh badge")
+    if "skills.sh.json" not in readme:
+        fail("README.md must describe skills.sh metadata")
 
     funding = read(ROOT / ".github" / "FUNDING.yml")
     for expected in [
@@ -126,6 +129,40 @@ def validate_readme_and_funding() -> None:
     ]:
         if expected not in funding:
             fail(f"FUNDING.yml missing: {expected}")
+
+
+def validate_skills_sh_metadata() -> None:
+    metadata_path = ROOT / "skills.sh.json"
+    try:
+        data = json.loads(read(metadata_path))
+    except json.JSONDecodeError as exc:
+        fail(f"skills.sh.json is invalid JSON: {exc}")
+
+    if data.get("$schema") != "https://skills.sh/schemas/skills.sh.schema.json":
+        fail("skills.sh.json must include the skills.sh schema URL")
+    if data.get("notGrouped") not in {"top", "bottom", "hidden"}:
+        fail("skills.sh.json notGrouped must be top, bottom, or hidden")
+
+    groupings = data.get("groupings")
+    if not isinstance(groupings, list) or not groupings:
+        fail("skills.sh.json must define at least one grouping")
+
+    found_skill = False
+    for group in groupings:
+        if not isinstance(group, dict):
+            fail("skills.sh.json groupings must be objects")
+        if not group.get("title"):
+            fail("each skills.sh.json grouping must have a title")
+        if not group.get("description"):
+            fail("each skills.sh.json grouping must have a description")
+        skills = group.get("skills")
+        if not isinstance(skills, list):
+            fail("each skills.sh.json grouping must have a skills list")
+        if "perfect-prompt" in skills:
+            found_skill = True
+
+    if not found_skill:
+        fail("skills.sh.json must include perfect-prompt in a grouping")
 
 
 def validate_evals() -> None:
@@ -169,6 +206,7 @@ def main() -> None:
     validate_skill_frontmatter()
     validate_skill_references()
     validate_readme_and_funding()
+    validate_skills_sh_metadata()
     validate_evals()
     print("ok: perfect-prompt skill repository is valid")
 

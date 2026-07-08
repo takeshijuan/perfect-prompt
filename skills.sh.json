@@ -1,0 +1,11 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Prompt Engineering",
+      "description": "Prompt generation workflows for agentic coding, review, debugging, QA, release, research, and planning tasks.",
+      "skills": ["perfect-prompt"]
+    }
+  ]
+}

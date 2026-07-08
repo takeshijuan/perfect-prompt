@@ -18,7 +18,7 @@ The skill generates the prompt only. It does not execute the requested task.
 
 ## Install
 
-After publication:
+From the public repository:
 
 ```bash
 npx skills add takeshijuan/perfect-prompt
@@ -42,6 +42,10 @@ List discoverable skills:
 npx skills add . --list
 ```
 
+## skills.sh Listing
+
+The repository is listed on [skills.sh](https://skills.sh/takeshijuan/perfect-prompt) after installs are observed through the `skills` CLI. The root `skills.sh.json` customizes the repo page display and groups this skill under `Prompt Engineering`.
+
 ## What It Produces
 
 The generated prompt includes:
@@ -58,6 +62,7 @@ The generated prompt includes:
 ## Repository Layout
 
 ```text
+skills.sh.json
 skills/perfect-prompt/
 ├── SKILL.md
 ├── evals/evals.json
