@@ -10,6 +10,7 @@ This repository contains an Agent Skill that generates prompts. Reports are in s
 
 - malicious or surprising skill behavior
 - prompt content that encourages unsafe exfiltration or unauthorized access
+- generated prompts that leak private memory content beyond what the task requires
 - supply-chain risk in scripts or workflows
 - repository configuration that exposes secrets
 

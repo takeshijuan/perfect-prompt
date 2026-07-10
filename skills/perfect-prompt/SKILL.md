@@ -1,6 +1,6 @@
 ---
 name: perfect-prompt
-description: Use this skill whenever the user wants a terse request, slash command, vague task, issue or PR instruction, feature idea, UI/dashboard request, debugging task, QA request, release task, research request, planning prompt, or existing prompt rewritten into a stronger ready-to-paste agent prompt. Trigger even when the user only writes shorthand like "review PR#123", "implement login system", "add a dashboard view", "address issue #123", "debug staging auth", or "/perfect-prompt: ...". This skill generates the prompt only; it does not execute the task.
+description: Use this skill whenever the user wants a terse request, slash command, vague task, issue or PR instruction, feature idea, UI/dashboard request, debugging task, QA request, release task, research request, planning prompt, or existing prompt rewritten into a stronger ready-to-paste agent prompt. Trigger even when the user only writes shorthand like "review PR#123", "implement login system", "add a dashboard view", "address issue #123", "debug staging auth", or "/perfect-prompt: ...". This skill generates the prompt only; it does not execute the task. Before composing, it gathers context: it reads the current conversation, reads configured user memory only when a memory system is detected, and resolves external references (issues, PRs, tickets, URLs, file paths) with available read-only tools so the generated prompt targets the real problem.
 license: MIT
 ---
 
@@ -22,13 +22,18 @@ Turn the user's short instruction into one complete agent prompt. The output is 
    - release or deploy
    - research
    - general planning or execution
-3. Infer only what is safe. If a value is discoverable by the receiving agent, instruct that agent to discover it instead of inserting a placeholder.
-4. Read references only as needed:
+3. Gather context before composing. Follow `references/context-gathering.md`:
+   - Conversation: scan the current chat for constraints, decisions, prior attempts, and files or systems already discussed, and fold the relevant facts into the generated prompt.
+   - Memory: detect whether the user has a memory system configured (harness-provided memory, instruction files naming a memory system, or memory tools in the tool list). Only when detected, read it and extract task-relevant facts. If nothing is configured, skip silently.
+   - External references: when the request points at an issue, PR, ticket, URL, or file path and a read-only tool can resolve it, resolve it now, digest the actual problem, and build the prompt around that digest. If it cannot be resolved, fall back to instructing the receiving agent to read it first and note the assumption in the prompt.
+4. Infer only what is safe. Prefer facts gathered in step 3. If a value is still unknown but discoverable by the receiving agent, instruct that agent to discover it instead of inserting a placeholder.
+5. Read references only as needed:
+   - Use `references/context-gathering.md` for conversation, memory detection, and external-reference resolution procedures.
    - Use `references/prompt-structure.md` for the baseline prompt contract.
    - Use `references/task-patterns.md` for task-specific sections.
    - Use `references/agent-orchestration.md` whenever the generated prompt should include parallel subagents, `/goal` blocks, or model/cost policy.
-5. Write a ready-to-paste prompt that the user can give to another agent.
-6. Self-check the generated prompt against the rubric below. Revise before answering if any item fails.
+6. Write a ready-to-paste prompt that the user can give to another agent.
+7. Self-check the generated prompt against the rubric below. Revise before answering if any item fails.
 
 ## Generated prompt requirements
 
@@ -37,6 +42,7 @@ The generated prompt must include:
 - A main `/goal` block.
 - A clear role line, usually starting with `You are ...`.
 - Objective, context discovery, source-of-truth rules, constraints, success criteria, execution policy, verification gates, and final response format.
+- A `## Context` section that carries resolved external-reference digests, conversation facts, and memory facts (memory only when a memory system is configured), plus an instruction to re-verify digests against live sources.
 - A bounded parallel-agent strategy when parallel work is useful.
 - Dedicated `/goal` text for each subagent lane when subagents are recommended.
 - Model/cost policy: cheaper/faster models for narrow discovery and checks; stronger models for architecture, risky edits, synthesis, and final review.
@@ -85,6 +91,8 @@ Before responding, verify:
 
 - The prompt is directly usable without additional explanation.
 - The task scope is inferred without overfitting to GitHub issues.
+- Available context was gathered and reflected: resolvable external references are resolved and digested into the prompt rather than delegated, and relevant conversation facts are folded in.
+- Memory facts appear only when a memory system was detected as configured, and only task-relevant facts are included.
 - The generated prompt does not execute the task.
 - Subagent fanout is useful, bounded, and cost-aware.
 - Each recommended subagent has its own dedicated `/goal`.

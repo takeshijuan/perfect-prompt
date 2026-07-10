@@ -22,13 +22,25 @@
     {
       "id": 4,
       "prompt": "/perfect-prompt: address issue #123",
-      "expected_output": "A single fenced markdown code block containing a ready-to-paste issue-fixing prompt that treats the issue number as one task type among many, instructs the agent to inspect issue metadata and related code, adds targeted tests, and separates local verification from PR or deployment state.",
+      "expected_output": "A single fenced markdown code block containing a ready-to-paste issue-fixing prompt. When tools to resolve the issue were available, the prompt is built around a digest of the actual problem extracted from issue #123 and instructs the receiving agent to verify the digest against the live issue; when resolution was not possible, the prompt instructs the agent to read the issue first and states that assumption explicitly. Either way it treats the issue number as one task type among many, adds targeted tests, and separates local verification from PR or deployment state.",
       "files": []
     },
     {
       "id": 5,
       "prompt": "make this better for an agent: fix the staging auth bug",
       "expected_output": "A single fenced markdown code block containing a ready-to-paste debugging prompt that asks the receiving agent to gather symptoms, inspect staging-specific configuration and logs where available, separate facts from hypotheses, parallelize independent investigation lanes, and report root cause, fix, verification, and remaining risk.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "/perfect-prompt: address https://github.com/example/repo/issues/999",
+      "expected_output": "A single fenced markdown code block containing an issue-fixing prompt that, because the referenced URL could not be resolved while generating the prompt, falls back to instructing the receiving agent to fetch and read the referenced issue before planning, and records the unresolved-reference assumption in the Context section instead of inventing issue details.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "make this better for an agent: finish the search feature. From our chat: we already decided on SQLite FTS5, the previous attempt failed CI because of a missing migration, and the relevant code lives in app/search/.",
+      "expected_output": "A single fenced markdown code block containing a feature-implementation prompt whose Context section carries the conversation facts (the SQLite FTS5 decision, the prior CI failure caused by a missing migration, the app/search/ location) as given constraints rather than asking the receiving agent to rediscover or renegotiate them.",
       "files": []
     }
   ]

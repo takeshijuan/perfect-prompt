@@ -27,6 +27,7 @@ REQUIRED_FILES = [
     "skills/perfect-prompt/references/prompt-structure.md",
     "skills/perfect-prompt/references/task-patterns.md",
     "skills/perfect-prompt/references/agent-orchestration.md",
+    "skills/perfect-prompt/references/context-gathering.md",
     "skills/perfect-prompt/evals/evals.json",
 ]
 
@@ -105,6 +106,7 @@ def validate_skill_references() -> None:
         "references/prompt-structure.md",
         "references/task-patterns.md",
         "references/agent-orchestration.md",
+        "references/context-gathering.md",
     ]:
         if relative not in text:
             fail(f"SKILL.md does not reference {relative}")

@@ -54,6 +54,7 @@ The generated prompt includes:
 - a single fenced `markdown` code block wrapper for easy copying
 - role and objective
 - context discovery and source-of-truth rules
+- context gathered up front by the skill itself: conversation facts, task-relevant user memory (only when a memory system is detected), and resolved external references (issue/PR/URL/file digests embedded in the prompt, with fallback instructions when a reference cannot be resolved)
 - constraints and success criteria
 - bounded parallel subagent plan with dedicated `/goal` blocks when useful
 - model/cost policy
@@ -69,6 +70,7 @@ skills/perfect-prompt/
 ├── evals/evals.json
 └── references/
     ├── agent-orchestration.md
+    ├── context-gathering.md
     ├── prompt-structure.md
     └── task-patterns.md
 ```
