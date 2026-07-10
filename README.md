@@ -67,7 +67,9 @@ The generated prompt includes:
 skills.sh.json
 skills/perfect-prompt/
 ├── SKILL.md
-├── evals/evals.json
+├── evals/
+│   ├── docs/bug-report.md
+│   └── evals.json
 └── references/
     ├── agent-orchestration.md
     ├── context-gathering.md

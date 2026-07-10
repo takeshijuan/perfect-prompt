@@ -40,8 +40,14 @@
     {
       "id": 7,
       "prompt": "make this better for an agent: finish the search feature. From our chat: we already decided on SQLite FTS5, the previous attempt failed CI because of a missing migration, and the relevant code lives in app/search/.",
-      "expected_output": "A single fenced markdown code block containing a feature-implementation prompt whose Context section carries the conversation facts (the SQLite FTS5 decision, the prior CI failure caused by a missing migration, the app/search/ location) as given constraints rather than asking the receiving agent to rediscover or renegotiate them.",
+      "expected_output": "A single fenced markdown code block containing a feature-implementation prompt whose Context section carries the conversation facts (the SQLite FTS5 decision, the prior CI failure caused by a missing migration, the app/search/ location) as given constraints rather than asking the receiving agent to rediscover or renegotiate them, and, since no memory system is configured in the eval environment, contains no mention of user memory or memory configuration.",
       "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "/perfect-prompt: fix the bug described in docs/bug-report.md",
+      "expected_output": "A single fenced markdown code block containing a debugging prompt whose Context section carries a Resolved: digest of docs/bug-report.md (what it is, a 1-3 sentence restatement of the problem, key facts) built from actually reading the supplied file rather than telling the receiving agent to go read it, plus an instruction to re-verify the digest against the live file before acting.",
+      "files": ["docs/bug-report.md"]
     }
   ]
 }

@@ -28,11 +28,12 @@ You are [role suited to the task]. Work pragmatically, verify claims against sou
 ## Context
 - User request: [original request]
 - Known identifiers: [issue/PR/path/service/etc. if present]
-- Resolved references: [digest of issue/PR/URL/file content resolved while generating this prompt, or "none — could not resolve X; assumption stated below"]
-- Conversation facts: [constraints, decisions, prior attempts, files discussed in the originating chat; omit if none]
+- Resolved references: [names of the references digested in the `### Resolved:` blocks below; for each unresolved reference, a "could not resolve X — read it before planning" line with the stated assumption; omit if the request contains no external references]
+- Conversation facts: [constraints, decisions, prior attempts, files discussed in the originating chat; never include secrets — reference them by name and location instead; omit if none]
 - Memory facts: [task-relevant facts from the user's configured memory; include only when a memory system is configured, omit otherwise]
 - Source truth to inspect: [repo docs, issue/PR body, tests, logs, UI, deployment, docs, etc.]
-- Digests above are a starting point captured at prompt-generation time; verify against the live source before acting.
+
+[One `### Resolved:` digest block per resolved reference, using the Digest Format in references/context-gathering.md. When any digest is present, end the section with: "Digests are a starting point captured at prompt-generation time; verify against the live source before acting." Omit this part entirely when nothing was resolved.]
 
 ## Operating Rules
 - Do not speculate about files, issues, PRs, logs, docs, or runtime state you have not inspected.

@@ -93,8 +93,20 @@ def validate_skill_frontmatter() -> None:
     if len(description) > 1024:
         fail("SKILL.md description must be 1024 characters or fewer")
     for keyword in ["prompt", "PR", "issue", "dashboard", "debugging", "planning"]:
-        if keyword.lower() not in description.lower():
+        if keyword == "PR":
+            found = re.search(r"(?<![A-Za-z])PR(?![A-Za-z])", description) is not None
+        else:
+            found = keyword.lower() in description.lower()
+        if not found:
             fail(f"SKILL.md description should include trigger keyword: {keyword}")
+
+    raw_lines = text.split("---\n", 2)[1].splitlines()
+    for index, line in enumerate(raw_lines):
+        if line.startswith("description:"):
+            if not line.split(":", 1)[1].strip():
+                fail("SKILL.md description must be on one line")
+            if index + 1 < len(raw_lines) and raw_lines[index + 1][:1] in (" ", "\t"):
+                fail("SKILL.md description must be on one line")
 
     if frontmatter.get("license") != "MIT":
         fail("SKILL.md license must be MIT")
@@ -121,6 +133,25 @@ def validate_skill_references() -> None:
     for phrase in required_phrases:
         if phrase not in text:
             fail(f"SKILL.md missing output wrapper rule: {phrase}")
+
+    context_phrases = [
+        "skip silently",
+        "`## Context` section",
+    ]
+    for phrase in context_phrases:
+        if phrase not in text:
+            fail(f"SKILL.md missing context-gathering rule: {phrase}")
+
+    gathering = read(SKILL_DIR / "references" / "context-gathering.md")
+    for heading in [
+        "## Conversation Context",
+        "## User Memory (detect before reading)",
+        "## External Reference Resolution",
+        "## Digest Format",
+        "## Fallback Rule",
+    ]:
+        if heading not in gathering:
+            fail(f"context-gathering.md missing section: {heading}")
 
 
 def validate_readme_and_funding() -> None:
