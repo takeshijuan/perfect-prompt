@@ -44,6 +44,13 @@ def read(path: Path) -> str:
         fail(f"missing required file: {path.relative_to(ROOT)}")
 
 
+def unquote_scalar(value: str) -> str:
+    value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in "'\"":
+        return value[1:-1]
+    return value
+
+
 def parse_frontmatter(text: str) -> dict[str, str]:
     if not text.startswith("---\n"):
         fail("SKILL.md must start with YAML frontmatter")
@@ -64,7 +71,7 @@ def parse_frontmatter(text: str) -> dict[str, str]:
             fail(f"invalid frontmatter line: {line}")
         key, value = line.split(":", 1)
         current_key = key.strip()
-        data[current_key] = value.strip().strip('"')
+        data[current_key] = unquote_scalar(value)
     return data
 
 
@@ -242,8 +249,12 @@ def validate_evals() -> None:
             fail("each eval must have expected_output")
         if "single fenced markdown code block" not in expected_output:
             fail("each eval expected_output must require a fenced markdown code block")
-        if not isinstance(item.get("files"), list):
+        files = item.get("files")
+        if not isinstance(files, list):
             fail("each eval must have files list")
+        for relative in files:
+            if not (eval_path.parent / relative).is_file():
+                fail(f"eval {item.get('id')} references missing file: {relative}")
 
 
 def main() -> None:
