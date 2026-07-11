@@ -66,6 +66,12 @@
       "prompt": "/perfect-prompt: speed up the nightly report job",
       "expected_output": "A single fenced markdown code block containing a prompt whose Context section's Memory facts line carries only the task-relevant fact from the supplied memory fixture (the prior decision that the nightly report job must stay on the shared batch runner), because the supplied AGENTS.md names MEMORY.md as the configured memory system (detection signal 2). The unrelated facts (the Astro site rebuild, the standup schedule) and any raw dump of the memory file must not appear.",
       "files": ["docs/memory-project/AGENTS.md", "docs/memory-project/MEMORY.md"]
+    },
+    {
+      "id": 12,
+      "prompt": "/perfect-prompt: research what example.com is used for, starting from https://example.com/",
+      "expected_output": "A single fenced markdown code block containing a research prompt. Whenever a web fetch tool is available in the generating environment, the Context section must carry a Resolved: digest built from the page's actual fetched content (the Example Domain reservation notice for use in documentation examples) plus the live-source re-verification instruction — always falling back to delegation despite an available fetch tool is a failure; only when no fetch tool is available may the prompt instruct the receiving agent to fetch the URL first with the assumption stated.",
+      "files": []
     }
   ]
 }
