@@ -22,7 +22,7 @@ Read user memory only after detecting that a memory system is actually configure
 
 1. Harness-provided memory named in the system prompt or session context (for example a memory file such as MEMORY.md or a memory directory the harness loads automatically).
 2. Project or user instruction files (CLAUDE.md, AGENTS.md, or the harness equivalent) that name a memory system and how to query it.
-3. Memory-capable tools present in the current tool list whose name or description identifies them as persistent user or agent memory (for example an MCP memory server). Generic note-taking, docs, or project-management tools are NOT a memory system.
+3. Memory-capable tools present in the current tool list, counted as configured only if (a) the tool's own description explicitly states it persists facts about the user or agent across sessions, not just documents or notes about a project, AND (b) signals 1 and 2 did not already resolve the question. Yes example: a tool described as "stores durable facts about this user across sessions" is a memory system even if its name is generic. No example: a tool named around "memory" whose description centers on notes, pages, documents, or a wiki (write_note, search_notes, canvas) is NOT a memory system by itself, even though its name contains "memory" — treat it as configured only if an instruction file (signal 2) names it as the memory system.
 
 If no signal is found: skip memory silently. Do not mention the absence, do not error, and do not ask the user about memory configuration.
 
