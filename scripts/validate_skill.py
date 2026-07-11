@@ -119,16 +119,27 @@ def validate_skill_frontmatter() -> None:
                 fail("SKILL.md description must be on one line")
             if index + 1 < len(raw_lines) and raw_lines[index + 1][:1] in (" ", "\t"):
                 fail("SKILL.md description must be on one line")
+            if raw_value[:1] in "'\"":
+                closed = re.match(r"^(['\"]).*?\1", raw_value)
+                if closed:
+                    trailing = raw_value[closed.end():].strip()
+                    if not trailing or trailing.startswith("#"):
+                        raw_value = raw_value[: closed.end()]
             quoted = (
                 len(raw_value) >= 2
                 and raw_value[0] == raw_value[-1]
                 and raw_value[0] in "'\""
             )
-            if not quoted and re.search(r"\s#", raw_value):
+            if not quoted and (
+                re.search(r"\s#", raw_value)
+                or re.search(r":\s", raw_value)
+                or raw_value.endswith(":")
+            ):
                 fail(
-                    "SKILL.md description must be quoted: in an unquoted YAML"
-                    " scalar, a '#' preceded by whitespace starts a comment and"
-                    " real YAML parsers silently truncate the value there"
+                    "SKILL.md description must be quoted: an unquoted YAML"
+                    " scalar breaks on a whitespace-preceded '#' (comment"
+                    " truncation) or on ': ' (mapping separator), so real YAML"
+                    " parsers truncate or reject the value"
                 )
 
     if frontmatter.get("license") != "MIT":

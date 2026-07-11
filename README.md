@@ -70,6 +70,8 @@ skills/perfect-prompt/
 ├── evals/
 │   ├── docs/
 │   │   ├── bug-report.md
+│   │   ├── bug-report-with-secret.md
+│   │   ├── fenced-issue.md
 │   │   ├── injected-issue.md
 │   │   └── memory-project/
 │   │       ├── AGENTS.md
