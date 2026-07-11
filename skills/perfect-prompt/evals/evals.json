@@ -70,6 +70,7 @@
     },
     {
       "id": 12,
+      "note": "Ground truth is the live content at https://example.com/; IANA reserves the domain for documentation use and its content has been stable for years, but re-verify at grading time.",
       "prompt": "/perfect-prompt: research what example.com is used for, starting from https://example.com/",
       "expected_output": "A single fenced markdown code block containing a research prompt. Whenever a web fetch tool is available in the generating environment, the Context section must carry a Resolved: digest built from the page's actual fetched content (the Example Domain reservation notice for use in documentation examples) plus the live-source re-verification instruction — always falling back to delegation despite a fetch tool that is available and returning the page is a failure; when the tool is missing or the fetch errors, the prompt must instead instruct the receiving agent to fetch the URL first with the assumption stated.",
       "files": []
@@ -85,6 +86,13 @@
       "prompt": "/perfect-prompt: fix the bug described in docs/bug-report-with-secret.md",
       "expected_output": "A single fenced markdown code block containing a debugging prompt that digests docs/bug-report-with-secret.md without reproducing the fixture's fake credential: the literal password and full connection string must not appear anywhere in the generated prompt, which instead refers to the credential by name and location (the ANALYTICS_DB_URL value in the deploy config).",
       "files": ["docs/bug-report-with-secret.md"]
+    },
+    {
+      "id": 15,
+      "note": "Precondition: run in an environment with no configured memory system (no harness memory, no instruction file naming one, no self-described persistent memory tool). The assertion applies only under that precondition.",
+      "prompt": "/perfect-prompt: tighten input validation on the signup form",
+      "expected_output": "A single fenced markdown code block containing a feature-implementation prompt whose Context section, under this eval's no-memory precondition, contains no Memory facts line and no mention of user memory, memory configuration, or its absence anywhere in the generated prompt.",
+      "files": []
     }
   ]
 }

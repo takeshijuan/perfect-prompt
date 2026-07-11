@@ -135,17 +135,18 @@ def validate_skill_frontmatter() -> None:
                 fail("SKILL.md description must be on one line")
             if index + 1 < len(raw_lines) and raw_lines[index + 1][:1] in (" ", "\t"):
                 fail("SKILL.md description must be on one line")
+            quoted = False
             if raw_value[:1] in "'\"":
                 closing = find_closing_quote(raw_value)
-                if closing != -1:
-                    trailing = raw_value[closing + 1 :].strip()
-                    if not trailing or trailing.startswith("#"):
-                        raw_value = raw_value[: closing + 1]
-            quoted = (
-                len(raw_value) >= 2
-                and raw_value[0] == raw_value[-1]
-                and raw_value[0] in "'\""
-            )
+                if closing == -1:
+                    fail("SKILL.md description has an unterminated quote")
+                trailing = raw_value[closing + 1 :].strip()
+                if trailing and not trailing.startswith("#"):
+                    fail(
+                        "SKILL.md description has content after the closing"
+                        " quote, which real YAML parsers reject"
+                    )
+                quoted = True
             if not quoted and (
                 re.search(r"\s#", raw_value)
                 or re.search(r":\s", raw_value)
