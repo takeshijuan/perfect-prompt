@@ -304,10 +304,11 @@ def validate_evals() -> None:
         id_value = item.get("id")
         if not isinstance(id_value, int) or isinstance(id_value, bool):
             fail("each eval must have an integer id")
-        if not item.get("prompt"):
+        prompt_value = item.get("prompt")
+        if not isinstance(prompt_value, str) or not prompt_value:
             fail("each eval must have a prompt")
         expected_output = item.get("expected_output")
-        if not expected_output:
+        if not isinstance(expected_output, str) or not expected_output:
             fail("each eval must have expected_output")
         if "single fenced markdown code block" not in expected_output:
             fail("each eval expected_output must require a fenced markdown code block")

@@ -73,6 +73,9 @@ skills/perfect-prompt/
 │   │   ├── bug-report-with-secret.md
 │   │   ├── fenced-issue.md
 │   │   ├── injected-issue.md
+│   │   ├── memory-injected/
+│   │   │   ├── AGENTS.md
+│   │   │   └── MEMORY.md
 │   │   └── memory-project/
 │   │       ├── AGENTS.md
 │   │       └── MEMORY.md
