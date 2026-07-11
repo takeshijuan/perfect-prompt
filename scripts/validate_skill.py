@@ -256,7 +256,10 @@ def validate_evals() -> None:
             fail(f"evals.json missing prompt: {prompt}")
 
     for item in evals:
-        if not isinstance(item.get("id"), int):
+        if not isinstance(item, dict):
+            fail("each eval must be a JSON object")
+        id_value = item.get("id")
+        if not isinstance(id_value, int) or isinstance(id_value, bool):
             fail("each eval must have an integer id")
         if not item.get("prompt"):
             fail("each eval must have a prompt")
@@ -269,6 +272,8 @@ def validate_evals() -> None:
         if not isinstance(files, list):
             fail("each eval must have files list")
         for relative in files:
+            if not isinstance(relative, str):
+                fail(f"eval {item.get('id')} has a non-string files entry")
             if relative.startswith(("/", "~")) or ".." in Path(relative).parts:
                 fail(f"eval {item.get('id')} has an unsafe files path: {relative}")
             candidate = (eval_path.parent / relative).resolve()

@@ -68,7 +68,12 @@ skills.sh.json
 skills/perfect-prompt/
 ├── SKILL.md
 ├── evals/
-│   ├── docs/bug-report.md
+│   ├── docs/
+│   │   ├── bug-report.md
+│   │   ├── injected-issue.md
+│   │   └── memory-project/
+│   │       ├── AGENTS.md
+│   │       └── MEMORY.md
 │   └── evals.json
 └── references/
     ├── agent-orchestration.md

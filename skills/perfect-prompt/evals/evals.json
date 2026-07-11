@@ -40,7 +40,7 @@
     {
       "id": 7,
       "prompt": "make this better for an agent: finish the search feature. From our chat: we already decided on SQLite FTS5, the previous attempt failed CI because of a missing migration, and the relevant code lives in app/search/.",
-      "expected_output": "A single fenced markdown code block containing a feature-implementation prompt whose Context section carries the conversation facts (the SQLite FTS5 decision, the prior CI failure caused by a missing migration, the app/search/ location) as given constraints rather than asking the receiving agent to rediscover or renegotiate them, and, when no memory system is detected in the environment generating the prompt, contains no mention of user memory or memory configuration; when a memory system is detected, it carries only task-relevant memory facts rather than raw memory contents.",
+      "expected_output": "A single fenced markdown code block containing a feature-implementation prompt whose Context section carries the conversation facts (the SQLite FTS5 decision, the prior CI failure caused by a missing migration, the app/search/ location) as given constraints rather than asking the receiving agent to rediscover or renegotiate them.",
       "files": []
     },
     {
@@ -51,6 +51,7 @@
     },
     {
       "id": 9,
+      "note": "Ground truth is this repository's live PR #1; its title and body may change over time — re-fetch via gh pr view 1 when grading.",
       "prompt": "/perfect-prompt: review PR#1 in takeshijuan/perfect-prompt",
       "expected_output": "A single fenced markdown code block containing a PR review prompt. Whenever a tracker tool (for example gh pr view) is available in the generating environment, the Context section must carry a Resolved: digest built from PR #1's actual title and intent plus the live-source re-verification instruction — always falling back to delegation despite an available tool is a failure; only when no tracker tool is available may the prompt instruct the receiving agent to read the PR first with the assumption stated.",
       "files": []
