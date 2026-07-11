@@ -33,6 +33,7 @@
     },
     {
       "id": 6,
+      "note": "The unresolvable premise depends on live third-party GitHub state (github.com/example/repo does not exist today); if that path ever starts resolving, retarget the prompt to another guaranteed-unresolvable URL.",
       "prompt": "/perfect-prompt: address https://github.com/example/repo/issues/999",
       "expected_output": "A single fenced markdown code block containing an issue-fixing prompt that, because the referenced URL could not be resolved while generating the prompt, falls back to instructing the receiving agent to fetch and read the referenced issue before planning, and records the unresolved-reference assumption in the Context section instead of inventing issue details.",
       "files": []
@@ -53,7 +54,7 @@
       "id": 9,
       "note": "Ground truth is this repository's live PR #1; its title and body may change over time — re-fetch via gh pr view 1 when grading.",
       "prompt": "/perfect-prompt: review PR#1 in takeshijuan/perfect-prompt",
-      "expected_output": "A single fenced markdown code block containing a PR review prompt. Whenever a tracker tool (for example gh pr view) is available in the generating environment, the Context section must carry a Resolved: digest built from PR #1's actual title and intent plus the live-source re-verification instruction — always falling back to delegation despite an available tool is a failure; only when no tracker tool is available may the prompt instruct the receiving agent to read the PR first with the assumption stated.",
+      "expected_output": "A single fenced markdown code block containing a PR review prompt. Whenever a tracker tool (for example gh pr view) is available in the generating environment, the Context section must carry a Resolved: digest built from PR #1's actual title and intent plus the live-source re-verification instruction — always falling back to delegation despite a tracker tool that is available, authenticated, and able to return the PR is a failure; when the tool is missing, unauthenticated, or erroring, the prompt must instead instruct the receiving agent to read the PR first with the assumption stated.",
       "files": []
     },
     {
@@ -71,7 +72,7 @@
     {
       "id": 12,
       "prompt": "/perfect-prompt: research what example.com is used for, starting from https://example.com/",
-      "expected_output": "A single fenced markdown code block containing a research prompt. Whenever a web fetch tool is available in the generating environment, the Context section must carry a Resolved: digest built from the page's actual fetched content (the Example Domain reservation notice for use in documentation examples) plus the live-source re-verification instruction — always falling back to delegation despite an available fetch tool is a failure; only when no fetch tool is available may the prompt instruct the receiving agent to fetch the URL first with the assumption stated.",
+      "expected_output": "A single fenced markdown code block containing a research prompt. Whenever a web fetch tool is available in the generating environment, the Context section must carry a Resolved: digest built from the page's actual fetched content (the Example Domain reservation notice for use in documentation examples) plus the live-source re-verification instruction — always falling back to delegation despite a fetch tool that is available and returning the page is a failure; when the tool is missing or the fetch errors, the prompt must instead instruct the receiving agent to fetch the URL first with the assumption stated.",
       "files": []
     }
   ]

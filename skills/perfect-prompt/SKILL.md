@@ -41,7 +41,7 @@ The generated prompt must include:
 - A main `/goal` block.
 - A clear role line, usually starting with `You are ...`.
 - Objective, context discovery, source-of-truth rules, constraints, success criteria, execution policy, verification gates, and final response format.
-- A `## Context` section that carries whichever context was gathered — resolved external-reference digests, conversation facts, and memory facts (memory only when a memory system is configured) — recording "none" plus the stated assumption when a reference could not be resolved, plus, whenever digests are present, an instruction to re-verify them against live sources.
+- A `## Context` section that carries whichever context was gathered — resolved external-reference digests, conversation facts, and memory facts (memory only when a memory system is configured) — recording, for each reference that could not be resolved, a could-not-resolve line with the stated assumption ("none" when nothing resolved), plus, whenever digests are present, an instruction to re-verify them against live sources.
 - A bounded parallel-agent strategy when parallel work is useful.
 - Dedicated `/goal` text for each subagent lane when subagents are recommended.
 - Model/cost policy: cheaper/faster models for narrow discovery and checks; stronger models for architecture, risky edits, synthesis, and final review.
