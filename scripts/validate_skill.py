@@ -318,8 +318,12 @@ def validate_evals() -> None:
         for relative in files:
             if not isinstance(relative, str):
                 fail(f"eval {item.get('id')} has a non-string files entry")
-            if relative.startswith(("/", "~")) or ".." in Path(relative).parts:
-                fail(f"eval {item.get('id')} has an unsafe files path: {relative}")
+            if (
+                "\x00" in relative
+                or relative.startswith(("/", "~"))
+                or ".." in Path(relative).parts
+            ):
+                fail(f"eval {item.get('id')} has an unsafe files path: {relative!r}")
             candidate = (eval_path.parent / relative).resolve()
             if not candidate.is_relative_to(eval_path.parent.resolve()) or not candidate.is_file():
                 fail(f"eval {item.get('id')} references missing file: {relative}")
