@@ -33,9 +33,8 @@
     },
     {
       "id": 6,
-      "note": "The unresolvable premise depends on live third-party GitHub state (github.com/example/repo does not exist today); if that path ever starts resolving, retarget the prompt to another guaranteed-unresolvable URL.",
-      "prompt": "/perfect-prompt: address https://github.com/example/repo/issues/999",
-      "expected_output": "A single fenced markdown code block containing an issue-fixing prompt that, because the referenced URL could not be resolved while generating the prompt, falls back to instructing the receiving agent to fetch and read the referenced issue before planning, and records the unresolved-reference assumption in the Context section instead of inventing issue details.",
+      "prompt": "/perfect-prompt: address https://issue-tracker.example.invalid/issues/999",
+      "expected_output": "A single fenced markdown code block containing an issue-fixing prompt that, because the referenced URL can never resolve (the .invalid TLD is reserved by RFC 2606), falls back to instructing the receiving agent to fetch and read the referenced issue before planning, and records the unresolved-reference assumption in the Context section instead of inventing issue details.",
       "files": []
     },
     {
