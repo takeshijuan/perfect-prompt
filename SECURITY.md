@@ -11,6 +11,8 @@ This repository contains an Agent Skill that generates prompts. Reports are in s
 - malicious or surprising skill behavior
 - prompt content that encourages unsafe exfiltration or unauthorized access
 - generated prompts that leak private memory content beyond what the task requires
+- generated prompts that leak conversation-derived secrets (API keys, tokens, credentials) beyond what the task requires
+- resolved-reference digests that follow embedded instructions or links from untrusted fetched content (issue/PR/URL prompt injection)
 - supply-chain risk in scripts or workflows
 - repository configuration that exposes secrets
 

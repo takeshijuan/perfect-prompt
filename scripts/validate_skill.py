@@ -47,7 +47,11 @@ def read(path: Path) -> str:
 def unquote_scalar(value: str) -> str:
     value = value.strip()
     if len(value) >= 2 and value[0] == value[-1] and value[0] in "'\"":
-        return value[1:-1]
+        quote = value[0]
+        inner = value[1:-1]
+        if quote == "'":
+            return inner.replace("''", "'")
+        return inner.replace('\\"', '"')
     return value
 
 
@@ -110,10 +114,22 @@ def validate_skill_frontmatter() -> None:
     raw_lines = text.split("---\n", 2)[1].splitlines()
     for index, line in enumerate(raw_lines):
         if line.startswith("description:"):
-            if not line.split(":", 1)[1].strip():
+            raw_value = line.split(":", 1)[1].strip()
+            if not raw_value:
                 fail("SKILL.md description must be on one line")
             if index + 1 < len(raw_lines) and raw_lines[index + 1][:1] in (" ", "\t"):
                 fail("SKILL.md description must be on one line")
+            quoted = (
+                len(raw_value) >= 2
+                and raw_value[0] == raw_value[-1]
+                and raw_value[0] in "'\""
+            )
+            if not quoted and re.search(r"\s#", raw_value):
+                fail(
+                    "SKILL.md description must be quoted: in an unquoted YAML"
+                    " scalar, a '#' preceded by whitespace starts a comment and"
+                    " real YAML parsers silently truncate the value there"
+                )
 
     if frontmatter.get("license") != "MIT":
         fail("SKILL.md license must be MIT")
