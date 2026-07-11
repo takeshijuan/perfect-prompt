@@ -121,7 +121,7 @@ def validate_skill_frontmatter() -> None:
         fail("SKILL.md description must be 1024 characters or fewer")
     for keyword in ["prompt", "PR", "issue", "dashboard", "debugging", "planning"]:
         if keyword == "PR":
-            found = re.search(r"(?<![A-Za-z])PR(?![A-Za-z])", description) is not None
+            found = re.search(r"(?<![A-Za-z])PRs?(?![A-Za-z])", description) is not None
         else:
             found = keyword.lower() in description.lower()
         if not found:
