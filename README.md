@@ -71,6 +71,7 @@ skills/perfect-prompt/
 │   ├── docs/
 │   │   ├── bug-report.md
 │   │   ├── bug-report-with-secret.md
+│   │   ├── feature-request.md
 │   │   ├── fenced-issue.md
 │   │   ├── injected-issue.md
 │   │   ├── memory-injected/
