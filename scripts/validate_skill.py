@@ -298,12 +298,16 @@ def validate_evals() -> None:
         if prompt not in prompts:
             fail(f"evals.json missing prompt: {prompt}")
 
+    seen_ids = set()
     for item in evals:
         if not isinstance(item, dict):
             fail("each eval must be a JSON object")
         id_value = item.get("id")
         if not isinstance(id_value, int) or isinstance(id_value, bool):
             fail("each eval must have an integer id")
+        if id_value in seen_ids:
+            fail(f"duplicate eval id: {id_value}")
+        seen_ids.add(id_value)
         prompt_value = item.get("prompt")
         if not isinstance(prompt_value, str) or not prompt_value:
             fail("each eval must have a prompt")

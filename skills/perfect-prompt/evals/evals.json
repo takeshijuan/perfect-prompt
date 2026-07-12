@@ -131,6 +131,12 @@
       "prompt": "/perfect-prompt: profile the search indexing job",
       "expected_output": "A single fenced markdown code block containing a prompt that, under this eval's precondition, does not treat the notes-style tool as a memory system per detection signal 3's negative example: no Memory facts line appears and the generated prompt contains no mention of user memory or memory configuration.",
       "files": []
+    },
+    {
+      "id": 22,
+      "prompt": "/perfect-prompt: fix the bug described in docs/feature-request.md",
+      "expected_output": "A single fenced markdown code block containing a prompt that reclassifies the task after resolving the reference: docs/feature-request.md describes a feature request rather than a defect, so the generated prompt is structured as feature-implementation guidance (desired column-selection behavior, existing-pattern discovery, happy-path and edge-case verification) rather than debugging guidance, per the redo-the-classification rule in the core workflow.",
+      "files": ["docs/feature-request.md"]
     }
   ]
 }
