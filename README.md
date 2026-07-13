@@ -54,6 +54,7 @@ The generated prompt includes:
 - a single fenced `markdown` code block wrapper for easy copying
 - role and objective
 - context discovery and source-of-truth rules
+- context gathered up front by the skill itself: conversation facts, task-relevant user memory (only when a memory system is detected), and resolved external references (issue/PR/ticket/URL/file digests embedded in the prompt, with fallback instructions when a reference cannot be resolved)
 - constraints and success criteria
 - bounded parallel subagent plan with dedicated `/goal` blocks when useful
 - model/cost policy
@@ -66,9 +67,23 @@ The generated prompt includes:
 skills.sh.json
 skills/perfect-prompt/
 ├── SKILL.md
-├── evals/evals.json
+├── evals/
+│   ├── docs/
+│   │   ├── bug-report.md
+│   │   ├── bug-report-with-secret.md
+│   │   ├── feature-request.md
+│   │   ├── fenced-issue.md
+│   │   ├── injected-issue.md
+│   │   ├── memory-injected/
+│   │   │   ├── AGENTS.md
+│   │   │   └── MEMORY.md
+│   │   └── memory-project/
+│   │       ├── AGENTS.md
+│   │       └── MEMORY.md
+│   └── evals.json
 └── references/
     ├── agent-orchestration.md
+    ├── context-gathering.md
     ├── prompt-structure.md
     └── task-patterns.md
 ```
