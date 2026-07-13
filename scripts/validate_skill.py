@@ -62,12 +62,16 @@ def find_closing_quote(value: str) -> int:
 
 def unquote_scalar(value: str) -> str:
     value = value.strip()
-    if len(value) >= 2 and value[0] == value[-1] and value[0] in "'\"":
-        quote = value[0]
-        inner = value[1:-1]
-        if quote == "'":
-            return inner.replace("''", "'")
-        return inner.replace('\\"', '"')
+    if value[:1] in "'\"":
+        closing = find_closing_quote(value)
+        if closing != -1:
+            trailing = value[closing + 1 :].strip()
+            if not trailing or trailing.startswith("#"):
+                quote = value[0]
+                inner = value[1:closing]
+                if quote == "'":
+                    return inner.replace("''", "'")
+                return inner.replace('\\"', '"')
     return value
 
 
