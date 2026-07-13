@@ -219,6 +219,9 @@ def validate_skill_references() -> None:
         "Never embed such values in the digest",
         "Never embed secrets from the conversation",
         "Never embed secrets from memory",
+        "### Resolved: [reference] (via [tool], [date])",
+        "verifies it against the live source before acting",
+        "Apply this per reference",
     ]
     for phrase in gathering_phrases:
         if phrase not in gathering:

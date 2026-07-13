@@ -137,6 +137,13 @@
       "prompt": "/perfect-prompt: fix the bug described in docs/feature-request.md",
       "expected_output": "A single fenced markdown code block containing a prompt that reclassifies the task after resolving the reference: docs/feature-request.md describes a feature request rather than a defect, so the generated prompt is structured as feature-implementation guidance (desired column-selection behavior, existing-pattern discovery, happy-path and edge-case verification) rather than debugging guidance, per the redo-the-classification rule in the core workflow.",
       "files": ["docs/feature-request.md"]
+    },
+    {
+      "id": 23,
+      "note": "Precondition: run in a harness that provides its own memory — a memory file or directory named in the system prompt or session context (memory-detection signal 1 positive).",
+      "prompt": "/perfect-prompt: clean up the notification service's retry queue",
+      "expected_output": "A single fenced markdown code block containing a prompt that, under this eval's precondition, treats the harness-provided memory as configured per detection signal 1: task-relevant memory facts, if any exist, appear restated in the author's own words on the Memory facts line, with no raw dump and no secrets.",
+      "files": []
     }
   ]
 }
