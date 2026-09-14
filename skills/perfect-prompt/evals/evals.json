@@ -4,19 +4,19 @@
     {
       "id": 1,
       "prompt": "/perfect-prompt: review PR#123",
-      "expected_output": "A single fenced markdown code block containing a ready-to-paste PR review prompt with a main /goal, PR metadata discovery, findings-first review format, bounded parallel review lanes with dedicated /goal blocks, model/cost guidance, and verification criteria.",
+      "expected_output": "A single fenced markdown code block containing a ready-to-paste PR review prompt with relevant PR context or an explicit unresolved-reference fallback, findings-first reporting, and appropriate verification. It preserves review-only scope without requiring /goal syntax, model routing, or parallel review lanes.",
       "files": []
     },
     {
       "id": 2,
       "prompt": "/perfect-prompt: implement login system",
-      "expected_output": "A single fenced markdown code block containing a ready-to-paste feature implementation prompt with source-truth discovery, auth/security considerations, implementation and test expectations, appropriate subagent lanes, dedicated /goal blocks, and final reporting rules.",
+      "expected_output": "A single fenced markdown code block containing a ready-to-paste login implementation prompt with relevant context, auth/security constraints, observable login behavior, and appropriate verification. It does not impose subagents, model choices, or dedicated /goal blocks unless requested or justified by the target environment.",
       "files": []
     },
     {
       "id": 3,
       "prompt": "/perfect-prompt: add a dashboard view",
-      "expected_output": "A single fenced markdown code block containing a ready-to-paste UI/dashboard prompt with existing design-system discovery, data/loading/error states, accessibility and responsive verification, bounded subagent use, and a concise final response contract.",
+      "expected_output": "A single fenced markdown code block containing a ready-to-paste dashboard prompt with relevant existing UI conventions, data and error states, accessibility, and responsive acceptance criteria. Its structure is proportional to the request rather than requiring orchestration or model policy.",
       "files": []
     },
     {
@@ -28,7 +28,7 @@
     {
       "id": 5,
       "prompt": "make this better for an agent: fix the staging auth bug",
-      "expected_output": "A single fenced markdown code block containing a ready-to-paste debugging prompt that asks the receiving agent to gather symptoms, inspect staging-specific configuration and logs where available, separate facts from hypotheses, parallelize independent investigation lanes, and report root cause, fix, verification, and remaining risk.",
+      "expected_output": "A single fenced markdown code block containing a debugging prompt that preserves the staging scope, distinguishes facts from hypotheses, identifies the symptoms and configuration to inspect, and defines evidence for the fix. Independent investigation lanes are optional rather than mandatory.",
       "files": []
     },
     {
@@ -144,6 +144,66 @@
       "prompt": "/perfect-prompt: clean up the notification service's retry queue",
       "expected_output": "A single fenced markdown code block containing a prompt that, under this eval's precondition, treats the harness-provided memory as configured per detection signal 1: task-relevant memory facts, if any exist, appear restated in the author's own words on the Memory facts line, with no raw dump and no secrets.",
       "files": []
+    },
+    {
+      "id": 24,
+      "prompt": "/perfect-prompt: fix the typo \"Recieve updates\" in the signup button; leave behavior unchanged",
+      "expected_output": "A single fenced markdown code block containing a short prompt that corrects the label, preserves behavior, and checks the rendered label. No role preamble, /goal, parallel plan, model policy, mandatory full test suite, or empty context section. Under a host that permits skipping irrelevant memory, no additional memory lookup or reference reading is needed.",
+      "files": []
+    },
+    {
+      "id": 25,
+      "prompt": "Write a prompt for an agent to plan a billing migration. Planning only; do not implement or deploy.",
+      "expected_output": "A single fenced markdown code block containing a planning prompt with a concrete planning deliverable and relevant migration constraints. It keeps implementation and deployment outside scope and does not assume that a coding agent should implement the plan.",
+      "files": []
+    },
+    {
+      "id": 26,
+      "prompt": "Write an agent prompt to investigate an API regression and a separate CSS layout issue. The target runtime supports two parallel subagents and /goal blocks; use both. Keep all work read-only and retain the runtime default models.",
+      "expected_output": "A single fenced markdown code block containing a bounded two-lane investigation prompt using the requested /goal syntax, distinct API and CSS objectives, read-only authority, and a synthesis point. It preserves the default models and does not perform the investigations while generating the prompt.",
+      "files": []
+    }
+  ],
+  "trigger_evals": [
+    {
+      "prompt": "review PR#123",
+      "should_trigger": false
+    },
+    {
+      "prompt": "implement login system",
+      "should_trigger": false
+    },
+    {
+      "prompt": "debug staging auth",
+      "should_trigger": false
+    },
+    {
+      "prompt": "Research options for database backups.",
+      "should_trigger": false
+    },
+    {
+      "prompt": "Review and update the perfect-prompt skill itself.",
+      "should_trigger": false
+    },
+    {
+      "prompt": "ログイン機能を実装して",
+      "should_trigger": false
+    },
+    {
+      "prompt": "/perfect-prompt: review PR#123",
+      "should_trigger": true
+    },
+    {
+      "prompt": "$perfect-prompt Fix the signup label typo.",
+      "should_trigger": true
+    },
+    {
+      "prompt": "make this better for an agent: fix the staging auth bug",
+      "should_trigger": true
+    },
+    {
+      "prompt": "AIエージェントに渡す実装依頼のプロンプトを書いて",
+      "should_trigger": true
     }
   ]
 }
