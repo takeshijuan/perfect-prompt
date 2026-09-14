@@ -1,10 +1,10 @@
 # Task Patterns
 
-Use the relevant pattern to adapt the generated prompt. Combine patterns when the user's request spans multiple task types.
+Use only considerations that affect the requested task. These are optional prompts for judgment, not mandatory sections, test suites, or approval gates. Preserve the user's requested scope and existing authorization.
 
 ## PR Review
 
-Emphasize review stance over implementation.
+Keep review read-only unless the user also requests fixes; do not add staging, commits, comments, or publication authority.
 
 Include:
 
@@ -101,5 +101,5 @@ Include:
 
 - Convert the vague request into a concrete objective.
 - Ask only for missing information that cannot be discovered.
-- Prefer implementation when the prompt is intended for a coding agent and the task is actionable.
+- Preserve a planning-only request; include implementation only when the user asks for it.
 - Require verification and a concise final report.

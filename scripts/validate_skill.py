@@ -123,17 +123,6 @@ def validate_skill_frontmatter() -> None:
         fail("SKILL.md description is required")
     if len(description) > 1024:
         fail("SKILL.md description must be 1024 characters or fewer")
-    for keyword in ["prompt", "PR", "issue", "dashboard", "debugging", "planning"]:
-        if keyword == "PR":
-            found = (
-                re.search(r"(?<![A-Za-z])PRs?(?![A-Za-z])", description, re.IGNORECASE)
-                is not None
-            )
-        else:
-            found = keyword.lower() in description.lower()
-        if not found:
-            fail(f"SKILL.md description should include trigger keyword: {keyword}")
-
     raw_lines = text.split("---\n", 2)[1].splitlines()
     for index, line in enumerate(raw_lines):
         if line.startswith("description:"):
@@ -183,25 +172,8 @@ def validate_skill_references() -> None:
         if not (SKILL_DIR / relative).is_file():
             fail(f"missing referenced file: {relative}")
 
-    required_phrases = [
-        "exactly one fenced `markdown` code block",
-        "no prose before or after",
-        "The entire answer is exactly one fenced `markdown` code block",
-    ]
-    for phrase in required_phrases:
-        if phrase not in text:
-            fail(f"SKILL.md missing output wrapper rule: {phrase}")
-
-    context_phrases = [
-        "skip silently",
-        "`## Context` section",
-        "resolve it now, digest the actual problem",
-        "No gathered data was placed into outbound URLs",
-    ]
-    for phrase in context_phrases:
-        if phrase not in text:
-            fail(f"SKILL.md missing context-gathering rule: {phrase}")
-
+    # Wording and routing behavior are evaluated with realistic prompts in evals.json.
+    # Keep deterministic checks focused on packaging and safety-reference integrity.
     gathering = read(SKILL_DIR / "references" / "context-gathering.md")
     for heading in [
         "## Conversation Context",
@@ -343,6 +315,21 @@ def validate_evals() -> None:
             candidate = (eval_path.parent / relative).resolve()
             if not candidate.is_relative_to(eval_path.parent.resolve()) or not candidate.is_file():
                 fail(f"eval {item.get('id')} references missing file: {relative}")
+
+    triggers = data.get("trigger_evals")
+    if not isinstance(triggers, list) or not triggers:
+        fail("evals.json must contain trigger_evals")
+    outcomes = set()
+    for item in triggers:
+        if not isinstance(item, dict):
+            fail("each trigger eval must be a JSON object")
+        if not isinstance(item.get("prompt"), str) or not item["prompt"].strip():
+            fail("each trigger eval must have a prompt")
+        if not isinstance(item.get("should_trigger"), bool):
+            fail("each trigger eval must have a boolean should_trigger")
+        outcomes.add(item["should_trigger"])
+    if outcomes != {True, False}:
+        fail("trigger_evals must include both positive and negative examples")
 
 
 def main() -> None:

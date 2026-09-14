@@ -19,5 +19,7 @@ jobs:
           node-version: "22"
       - name: Validate repository files
         run: python scripts/validate_skill.py
+      - name: Check routing eval validation
+        run: python scripts/test_validate_skill.py
       - name: Verify skills CLI discovery
         run: npx skills add . --list

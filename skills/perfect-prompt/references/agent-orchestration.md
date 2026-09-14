@@ -1,59 +1,21 @@
 # Agent Orchestration Reference
 
-Use this reference when the generated prompt should tell the receiving agent how to spawn and manage subagents.
+Use only when the user requests parallel work or independent subtasks would materially help and the receiving environment permits delegation. Prompt generation itself does not authorize spawning agents or changing model settings.
 
-## When To Parallelize
+## Independent work
 
-Recommend subagents when the task has independent lanes that can proceed without waiting on each other, such as:
+Describe each useful lane's objective, scope, expected result, and edit authority. Choose a small bound based on the actual independent work and available runtime capacity; do not prescribe agent counts by task size alone. Keep coupled or sequential work together and avoid overlapping ownership of the same edits.
 
-- reading separate parts of a large codebase
-- comparing implementation against docs or issues
-- reviewing API, UI, data, and test impact separately
-- investigating logs, config, recent commits, and reproduction paths
-- checking security, accessibility, performance, or migration risk
+A lane can be a sentence, for example: "Review the API changes for authorization regressions; return actionable findings and evidence without editing files."
 
-Keep the task single-threaded when:
+Use `/goal` syntax only when requested or known to be supported and helpful. Do not require a separate goal block for every lane.
 
-- it is small enough for one pass
-- every step depends on the previous step
-- the required context is too intertwined to split cleanly
-- subagent overhead would exceed likely benefit
+## Models and stopping
 
-## Fanout Budget
+Preserve the user's model and budget choices. Include model-routing advice only when requested or useful for a known multi-model runtime; use only models actually available there. Otherwise let the receiving environment keep its defaults.
 
-Tell the main agent to spawn only lanes with clear marginal value. A useful default:
+Bound repeated review or repair by the task's scope and evidence needs. Stop duplicate work and stop another pass when it cannot add useful evidence. A suggested parallel plan must not expand permission to send messages, publish, deploy, or modify external state.
 
-- 0 subagents for trivial or highly sequential tasks
-- 2-3 subagents for medium tasks with distinct discovery/review lanes
-- 4-6 subagents for broad PRs, incidents, or multi-surface features
-- More only when each lane has a bounded scope and a clear merge point
+## Synthesis
 
-## Model And Cost Policy
-
-Include this policy in generated prompts:
-
-- Use cheaper/faster models for narrow searches, file inventory, log scanning, documentation lookup, and straightforward test checks.
-- Use stronger models for architecture decisions, security-sensitive analysis, complex debugging, cross-lane synthesis, and final review.
-- Stop a subagent early if its lane becomes duplicative or low-signal.
-- Prefer one strong synthesis pass over many expensive overlapping agents.
-
-## Subagent Goal Template
-
-Each recommended subagent must receive its own `/goal` block.
-
-```markdown
-### Subagent: [lane name]
-Recommended model: [cheap/fast or strong, with reason]
-
-/goal
-[One independent objective for this subagent.]
-
-Scope:
-- Inspect: [files/docs/issues/logs/etc.]
-- Produce: [short report, findings, patch recommendation, test list, risk notes]
-- Do not: [avoid edits, avoid duplicate lane, avoid speculation]
-```
-
-## Synthesis Rule
-
-The main agent should merge returned results by resolving conflicts, deduplicating findings, and choosing the smallest complete execution path. It should not paste subagent reports directly into the final answer unless the user asked for raw reports.
+The main agent resolves conflicting evidence, deduplicates findings, and integrates authorized changes. Ask it for a coherent result, not concatenated subagent reports.

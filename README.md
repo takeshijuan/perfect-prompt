@@ -14,6 +14,8 @@ Examples:
 /perfect-prompt: debug staging auth
 ```
 
+Use the skill when asking to create or improve a prompt, explicitly by name or in natural language (for example, "make this better for an agent: fix the staging auth bug"). Bare requests such as "review PR#123" and "implement login system" should run as ordinary tasks rather than activate this skill.
+
 The skill generates the prompt only. It does not execute the requested task.
 
 ## Install
@@ -48,18 +50,11 @@ The repository is listed on [skills.sh](https://skills.sh/takeshijuan/perfect-pr
 
 ## What It Produces
 
-The generated prompt includes:
+The output is one fenced `markdown` code block containing the requested outcome, relevant context and constraints, and observable completion criteria. Small tasks can stay short; larger tasks can use headings and supporting detail.
 
-- a main `/goal`
-- a single fenced `markdown` code block wrapper for easy copying
-- role and objective
-- context discovery and source-of-truth rules
-- context gathered up front by the skill itself: conversation facts, task-relevant user memory (only when a memory system is detected), and resolved external references (issue/PR/ticket/URL/file digests embedded in the prompt, with fallback instructions when a reference cannot be resolved)
-- constraints and success criteria
-- bounded parallel subagent plan with dedicated `/goal` blocks when useful
-- model/cost policy
-- verification gates
-- final reporting format
+The skill resolves supplied references read-only, carries relevant conversation or configured-memory facts when needed, and preserves privacy and untrusted-content boundaries. It records unavailable references instead of inventing their contents.
+
+Role declarations, `/goal` blocks, execution plans, model choices, and parallel-agent plans are optional. Include them when requested or useful in the target environment, without adding permissions or mandatory workflow overhead.
 
 ## Repository Layout
 
@@ -92,8 +87,11 @@ skills/perfect-prompt/
 
 ```bash
 python scripts/validate_skill.py
+python scripts/test_validate_skill.py
 npx skills add . --list
 ```
+
+`evals/evals.json` contains prompt-generation scenarios and positive/negative skill-selection cases. The validator checks their structure; it does not execute model-based behavioral evaluations. Use a fresh agent context to evaluate selection from the skill description and generated outputs against the scenarios.
 
 After pushing to GitHub:
 
